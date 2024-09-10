@@ -6,7 +6,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SpaceTraders API Project",
+  title: "SpaceTraders Dashboard",
   description: "A project to interact with the SpaceTraders API",
 };
 
