@@ -11,7 +11,7 @@ export interface AgentDetails {
     shipCount: number
 }
 
-export interface Waypoint {
+export interface WaypointProps {
     systemSymbol: string,
     symbol: string,
     type: string,
@@ -53,7 +53,7 @@ export async function getAgentDetails(token: string): Promise<AgentDetails> {
     return json.data;
 }
 
-export async function getWaypointInfo(token: string, symbol: string): Promise<Waypoint> {
+export async function getWaypointInfo(token: string, symbol: string): Promise<WaypointProps> {
     const options = {
         headers: {
             'Content-Type': 'application/json',
@@ -72,6 +72,6 @@ export async function getWaypointInfo(token: string, symbol: string): Promise<Wa
         throw new Error(message);
     }
 
-    const json = await response.json() as ApiResponse<Waypoint>;
+    const json = await response.json() as ApiResponse<WaypointProps>;
     return json.data;
 }
