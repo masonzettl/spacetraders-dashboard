@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react"
-import { getWaypointInfo, WaypointProps } from "../lib/spacetraders"
+import { getWaypointInfo, Waypoint } from "../lib/spacetraders"
 import { TokenContext } from "../context/TokenContext"
 import Tooltip from "./Tooltip";
 
-export default function Waypoint({ symbol }: { symbol: string }) {
+export default function WaypointPanel({ symbol }: { symbol: string }) {
     const token = useContext(TokenContext);
 
-    const [waypointData, setWaypointData] = useState({} as WaypointProps);
+    const [waypointData, setWaypointData] = useState({} as Waypoint);
 
     useEffect(() => {
         // Async cannot be used in the useEffect itself, so we define an async function inside of it as a workaround

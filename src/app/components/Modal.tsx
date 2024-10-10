@@ -1,6 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/16/solid";
+import { MouseEventHandler, ReactNode } from "react";
 
-export default function Modal({ open, onClose, children }) {
+export default function Modal({ open, onClose, children }: { open: boolean, onClose: MouseEventHandler, children: ReactNode }) {
     return (
         <div onClick={onClose} className={`
             fixed inset-0 w-screen h-screen flex justify-center items-center transition-colors
