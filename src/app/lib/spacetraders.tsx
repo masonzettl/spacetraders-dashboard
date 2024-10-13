@@ -1,5 +1,40 @@
 interface ApiResponse<T> {
-    data: T
+    data: T,
+    meta?: {
+        total: number,
+        page: number,
+        limit: number
+    }
+}
+
+interface ErrorResponse {
+    error: {
+        message: string,
+        code: number
+    }
+}
+
+export async function sendRequest<T>({ method, token, parameters, url }: { method: "POST" | "GET", token?: string, parameters?: Object, url: string }): Promise<T | ErrorResponse> {
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            ...token && { 'Authorization': `Bearer ${token}` }
+        },
+        ...parameters && { body: JSON.stringify(parameters) }
+    };
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        const errorResponse = await response.json() as ErrorResponse;
+        console.error(errorResponse.error.message);
+        return errorResponse;
+    }
+
+    const json = await response.json() as ApiResponse<T>;
+
+    return json.data;
 }
 
 export interface Agent {
@@ -207,71 +242,37 @@ export interface RegisterResponse {
     token: string
 }
 
-export async function registerAgent(symbol: string, faction: string, email?: string): Promise<RegisterResponse> {
-    const options = {
+export async function registerAgent(parameters: { symbol: string; faction: string; email?: string }): Promise<RegisterResponse | ErrorResponse> {
+    const response = await sendRequest<RegisterResponse>({
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            symbol: symbol,
-            faction: faction,
-            email: email
-        })
-    };
+        parameters: parameters,
+        url: 'https://api.spacetraders.io/v2/register'
+    });
 
-    const response = await fetch('https://api.spacetraders.io/v2/register', options);
-
-    if (!response.ok) {
-        const message = `An error occurred: ${response.status}`;
-        throw new Error(message);
-    }
-
-    const json = await response.json() as ApiResponse<RegisterResponse>;
-
-    console.log(json.data);
-
-    return json.data;
+    return response;
 }
 
-export async function getAgent(token: string): Promise<Agent> {
-    const options = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    };
+export async function getAgent(token: string): Promise<Agent | ErrorResponse> {
+    const response = await sendRequest<Agent>({
+        method: 'GET',
+        token: token,
+        url: 'https://api.spacetraders.io/v2/my/agent'
+    });
 
-    const response = await fetch('https://api.spacetraders.io/v2/my/agent', options);
-
-    if (!response.ok) {
-        const message = `An error occurred: ${response.status}`;
-        throw new Error(message);
-    }
-
-    const json = await response.json() as ApiResponse<Agent>;
-    return json.data;
+    return response;
 }
 
-export async function getWaypointInfo(token: string, symbol: string): Promise<Waypoint> {
-    const options = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    }
-
+export async function getWaypointInfo(token: string, symbol: string): Promise<Waypoint | ErrorResponse> {
     // Waypoint symbols are made up of three sections: the sector, system, and location
     const symbolSections = symbol.split('-');
-    if (symbolSections.length != 3) throw new Error('An error occurred: Invalid waypoint symbol');
 
-    const response = await fetch(`https://api.spacetraders.io/v2/systems/${symbolSections[0]}-${symbolSections[1]}/waypoints/${symbol}`, options);
+    const url = `https://api.spacetraders.io/v2/systems/${symbolSections[0]}-${symbolSections[1]}/waypoints/${symbol}`;
 
-    if (!response.ok) {
-        const message = `An error occurred: ${response.status}`;
-        throw new Error(message);
-    }
+    const response = await sendRequest<Waypoint>({
+        method: 'GET',
+        token: token,
+        url: url
+    });
 
-    const json = await response.json() as ApiResponse<Waypoint>;
-    return json.data;
+    return response;
 }

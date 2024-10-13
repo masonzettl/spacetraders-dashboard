@@ -13,7 +13,8 @@ export default function WaypointPanel({ symbol }: { symbol: string }) {
         const fetchData = async () => {
           const data = await getWaypointInfo(token, symbol);
     
-          setWaypointData(data);
+          if ('symbol' in data)
+            setWaypointData(data);
         }
     
         fetchData();

@@ -28,8 +28,8 @@ export default function Home() {
     const agentSymbol = data.get("call-sign")?.toString() || "";
     const factionSymbol = "COSMIC";
 
-    const registerResponse = await registerAgent(agentSymbol, factionSymbol).catch(() => { return null; });
-    if (registerResponse != null) {
+    const registerResponse = await registerAgent({ symbol: agentSymbol, faction: factionSymbol }).catch(() => { return null; });
+    if (registerResponse != null && 'token' in registerResponse) {
       setRegisteredToken(registerResponse.token);
     }
 

@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import ArrowRightStartOnRectangleIcon from "@heroicons/react/24/outline/esm/ArrowRightStartOnRectangleIcon";
 import { getAgent, Agent } from "../lib/spacetraders";
 import { TokenContext } from "../context/TokenContext";
-import Overview from "./overview";
+import Overview from "./Overview";
+import Contracts from "./Contracts";
 
 enum Tab {
   Overview,
@@ -30,7 +31,8 @@ export default function Dashboard() {
     const fetchData = async () => {
       const agent = await getAgent(token);
 
-      setAgentDetails(agent);
+      if ('accountId' in agent)
+        setAgentDetails(agent);
     }
 
     fetchData();
@@ -44,7 +46,7 @@ export default function Dashboard() {
   const renderTab = () => {
     switch(currentTab) {
       case Tab.Overview : return <Overview agent={agentDetails} />
-      case Tab.Contracts : return <></>
+      case Tab.Contracts : return <Contracts />
     }
   }
 
