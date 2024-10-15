@@ -1,5 +1,6 @@
-import { Agent } from "../lib/spacetraders";
-import WaypointPanel from "../components/WaypointPanel";
+import { Agent } from "../lib/spacetraders/agentsApi";
+import WaypointPanel from "../components/panels/WaypointPanel";
+import BasePanel from "../components/panels/BasePanel";
 
 export default function Overview({ agent }: { agent: Agent }) {
   return (
@@ -7,7 +8,7 @@ export default function Overview({ agent }: { agent: Agent }) {
       <h1 className="text-5xl font-bold my-4">Overview</h1>
 
       <div className="flex space-x-4">
-        <div className="flex-initial w-[20%] bg-gray-700 border border-gray-600 px-4 py-2 rounded-lg shadow-lg">
+        <BasePanel className="w-[20%]">
           <h1 className="text-2xl font-bold mb-2">Agent Details</h1>
           <ul>
             <li className="flow-root">
@@ -51,7 +52,7 @@ export default function Overview({ agent }: { agent: Agent }) {
               </div>
             </li>
           </ul>
-        </div>
+        </BasePanel>
 
         {agent.headquarters ? <WaypointPanel symbol={agent.headquarters} /> : <></>}
       </div>

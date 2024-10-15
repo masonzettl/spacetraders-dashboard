@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react"
-import { getWaypointInfo, Waypoint } from "../lib/spacetraders"
-import { TokenContext } from "../context/TokenContext"
-import Tooltip from "./Tooltip";
+import { getWaypointInfo } from "@/app/lib/spacetraders/systemsApi";
+import { Waypoint } from "@/app/lib/spacetraders/systemsApi";
+import { TokenContext } from "../../context/TokenContext"
+import Tooltip from "../Tooltip";
+import BasePanel from "./BasePanel";
 
 export default function WaypointPanel({ symbol }: { symbol: string }) {
     const token = useContext(TokenContext);
@@ -18,10 +20,10 @@ export default function WaypointPanel({ symbol }: { symbol: string }) {
         }
     
         fetchData();
-      }, []);
+      }, [token]);
 
     return (
-        <div className="flex-initial w-[20%] bg-gray-700 border border-gray-600 px-4 py-2 rounded-lg shadow-lg">
+        <BasePanel className="w-[20%]">
             <h1 className="text-2xl font-bold mb-1">Waypoint {waypointData.symbol}</h1>
             <ul>
                 <li className="flex justify-between">
@@ -58,6 +60,6 @@ export default function WaypointPanel({ symbol }: { symbol: string }) {
                     </div>
                 </li>
             </ul>
-        </div>
+        </BasePanel>
     )
 }

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useCookies } from "next-client-cookies";
 import { redirect } from "next/navigation";
 import ArrowRightStartOnRectangleIcon from "@heroicons/react/24/outline/esm/ArrowRightStartOnRectangleIcon";
-import { getAgent, Agent } from "../lib/spacetraders";
+import { getAgent } from "../lib/spacetraders/agentsApi";
+import { Agent } from "../lib/spacetraders/agentsApi";
 import { TokenContext } from "../context/TokenContext";
 import Overview from "./Overview";
 import Contracts from "./Contracts";
@@ -22,7 +23,7 @@ export default function Dashboard() {
   if (token == "") {
     redirect("/");
   }
-
+  
   const [agentDetails, setAgentDetails] = useState({} as Agent);
   const [currentTab, setCurrentTab] = useState(Tab.Overview);
   
@@ -36,7 +37,7 @@ export default function Dashboard() {
     }
 
     fetchData();
-  }, []);
+  }, [cookies]);
 
   function logout() {
     cookies.remove("token");
