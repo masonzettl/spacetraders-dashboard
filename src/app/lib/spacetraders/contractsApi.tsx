@@ -1,3 +1,4 @@
+import { Agent } from "./agentsApi";
 import { ApiResponse, ErrorResponse, sendRequest } from "./baseApi";
 
 export interface Contract {
@@ -35,6 +36,23 @@ export function getContracts({ token, parameters }: { token: string, parameters?
 
     const response = sendRequest<Contract[]>({
         method: 'GET',
+        token: token,
+        url: url
+    });
+
+    return response;
+}
+
+type AcceptContractReponse = {
+    agent: Agent,
+    contract: Contract
+}
+
+export function acceptContract({ token, contract }: { token: string, contract: Contract }): Promise<AcceptContractReponse | ErrorResponse> {
+    const url = `https://api.spacetraders.io/v2/my/contracts/${contract.id}/accept`;
+
+    const response = sendRequest<AcceptContractReponse>({
+        method: 'POST',
         token: token,
         url: url
     });

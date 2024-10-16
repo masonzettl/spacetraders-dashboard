@@ -12,7 +12,7 @@ export default function Contracts() {
 
       <div className="flex space-x-4">
         <ContractListPanel onSelect={(contract: Contract) => setCurrentContract(contract)} />
-        <ContractPanel contract={currentContract} />
+        <ContractPanel contract={currentContract} updateContractCallback={(contract: Contract) => setCurrentContract(contract)} />
       </div>
     </>
   );
