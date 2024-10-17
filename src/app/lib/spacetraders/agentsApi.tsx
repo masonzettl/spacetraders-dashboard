@@ -1,11 +1,12 @@
 import { ErrorResponse, sendRequest } from "./baseApi";
+import { FactionSymbol } from "./factionsApi";
 
 export interface Agent {
     accountId: string;
     symbol: string;
     headquarters: string;
     credits: number;
-    startingFaction: string;
+    startingFaction: FactionSymbol;
     shipCount: number;
 }
 

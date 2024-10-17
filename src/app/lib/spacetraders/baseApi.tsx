@@ -3,6 +3,11 @@ import { Faction } from "./factionsApi";
 import { Agent } from "./agentsApi";
 import { Contract } from "./contractsApi";
 
+export type QueryParameters = {
+    limit?: number;
+    page?: number;
+};
+
 export interface ApiResponse<T> {
     data: T;
     meta?: {
@@ -59,4 +64,3 @@ export async function registerAgent(parameters: { symbol: string; faction: strin
 
     return response;
 }
-

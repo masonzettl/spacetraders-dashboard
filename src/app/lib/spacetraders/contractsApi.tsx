@@ -1,34 +1,49 @@
 import { Agent } from "./agentsApi";
-import { ApiResponse, ErrorResponse, sendRequest } from "./baseApi";
+import { ApiResponse, ErrorResponse, QueryParameters, sendRequest } from "./baseApi";
 
+// ~ CONTRACT INTERFACES ~
+
+// Contract details.
 export interface Contract {
     id: string;
     factionSymbol: string;
     type: "PROCUREMENT" | "TRANSPORT" | "SHUTTLE";
-    terms: {
-        deadline: string;
-        payment: {
-            onAccepted: number;
-            onFulfilled: number;
-        };
-        deliver: [{
-            tradeSymbol: string;
-            destinationSymbol: string;
-            unitsRequired: number;
-            unitsFulfilled: number;
-        }];
-    };
+    terms: ContractTerms;
     accepted: boolean;
     fulfilled: boolean;
     deadlineToAccept?: string;
 }
 
-type GetContractParameters = {
-    limit?: number,
-    page?: number
+// The terms to fulfill the contract.
+export interface ContractTerms {
+    deadline: string;
+    payment: ContractPayment;
+    deliver: ContractDeliverGood[];
 }
 
-export function getContracts({ token, parameters }: { token: string, parameters?: GetContractParameters }): Promise<Contract[] | ErrorResponse> {
+// Payments for the contract.
+export interface ContractPayment {
+    onAccepted: number;
+    onFulfilled: number;
+}
+
+// The details of a delivery contract. Includes the type of good, units needed, and the destination.
+export interface ContractDeliverGood {
+    tradeSymbol: string;
+    destinationSymbol: string;
+    unitsRequired: number;
+    unitsFulfilled: number;
+}
+
+// ~ CONTRACT TYPES ~
+type AcceptContractReponse = {
+    agent: Agent,
+    contract: Contract
+}
+
+// ~ CONTRACT REQUESTS ~
+
+export function getContracts({ token, parameters }: { token: string, parameters?: QueryParameters }): Promise<Contract[] | ErrorResponse> {
     const url = `https://api.spacetraders.io/v2/my/contracts
         ${parameters?.limit ? `?limit=${parameters.limit}` : ""}
         ${parameters?.page ? `?page=${parameters.page}` : ""}
@@ -41,11 +56,6 @@ export function getContracts({ token, parameters }: { token: string, parameters?
     });
 
     return response;
-}
-
-type AcceptContractReponse = {
-    agent: Agent,
-    contract: Contract
 }
 
 export function acceptContract({ token, contract }: { token: string, contract: Contract }): Promise<AcceptContractReponse | ErrorResponse> {
