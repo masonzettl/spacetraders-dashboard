@@ -7,7 +7,7 @@ import { ApiResponse, ErrorResponse, QueryParameters, sendRequest } from "./base
 export interface Contract {
     id: string;
     factionSymbol: string;
-    type: "PROCUREMENT" | "TRANSPORT" | "SHUTTLE";
+    type: ContractType;
     terms: ContractTerms;
     accepted: boolean;
     fulfilled: boolean;
@@ -35,6 +35,13 @@ export interface ContractDeliverGood {
     unitsFulfilled: number;
 }
 
+// ~ CONTRACT ENUMS ~
+enum ContractType {
+    "PROCUREMENT",
+    "TRANSPORT",
+    "SHUTTLE"
+}
+
 // ~ CONTRACT TYPES ~
 type AcceptContractReponse = {
     agent: Agent,
@@ -43,13 +50,13 @@ type AcceptContractReponse = {
 
 // ~ CONTRACT REQUESTS ~
 
-export function getContracts({ token, parameters }: { token: string, parameters?: QueryParameters }): Promise<Contract[] | ErrorResponse> {
+export async function getContracts({ token, parameters }: { token: string, parameters?: QueryParameters }): Promise<Contract[] | ErrorResponse> {
     const url = `https://api.spacetraders.io/v2/my/contracts
         ${parameters?.limit ? `?limit=${parameters.limit}` : ""}
         ${parameters?.page ? `?page=${parameters.page}` : ""}
     `;
 
-    const response = sendRequest<Contract[]>({
+    const response = await sendRequest<Contract[]>({
         method: 'GET',
         token: token,
         url: url
@@ -58,10 +65,10 @@ export function getContracts({ token, parameters }: { token: string, parameters?
     return response;
 }
 
-export function acceptContract({ token, contract }: { token: string, contract: Contract }): Promise<AcceptContractReponse | ErrorResponse> {
+export async function acceptContract({ token, contract }: { token: string, contract: Contract }): Promise<AcceptContractReponse | ErrorResponse> {
     const url = `https://api.spacetraders.io/v2/my/contracts/${contract.id}/accept`;
 
-    const response = sendRequest<AcceptContractReponse>({
+    const response = await sendRequest<AcceptContractReponse>({
         method: 'POST',
         token: token,
         url: url

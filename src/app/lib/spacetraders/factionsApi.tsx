@@ -1,8 +1,26 @@
 import { ErrorResponse, QueryParameters, sendRequest } from "./baseApi";
 
-export type FactionSymbol = 'COSMIC' | 'VOID' | 'GALACTIC' | 'QUANTUM' | 'DOMINION' | 'ASTRO' | 'CORSAIRS' |
-    'OBSIDIAN' | 'AEGIS' | 'UNITED' | 'SOLITARY' | 'COBALT' | 'OMEGA' | 'ECHO' | 'LORDS' | 'CULT' |
-    'ANCIENTS' | 'SHADOW' | 'ETHEREAL';
+export enum FactionSymbol {
+    'COSMIC',
+    'VOID',
+    'GALACTIC',
+    'QUANTUM',
+    'DOMINION',
+    'ASTRO',
+    'CORSAIRS',
+    'OBSIDIAN',
+    'AEGIS',
+    'UNITED',
+    'SOLITARY',
+    'COBALT',
+    'OMEGA',
+    'ECHO',
+    'LORDS',
+    'CULT',
+    'ANCIENTS',
+    'SHADOW',
+    'ETHEREAL'
+}
 
 export interface Faction {
     symbol: FactionSymbol;
@@ -23,7 +41,7 @@ export async function listFactions({ token, parameters }: { token?: string, para
         ${parameters?.page ? `?page=${parameters.page}` : ""}
     `;
 
-    const response = sendRequest<Faction[]>({
+    const response = await sendRequest<Faction[]>({
         method: 'GET',
         ...token && { token: token },
         url: url
@@ -35,7 +53,7 @@ export async function listFactions({ token, parameters }: { token?: string, para
 export async function getFaction({ token, factionSymbol }: { token: string, factionSymbol: FactionSymbol }): Promise<Faction | ErrorResponse> {
     const url = `https://api.spacetraders.io/v2/factions/${factionSymbol}`;
 
-    const response = sendRequest<Faction>({
+    const response = await sendRequest<Faction>({
         method: 'GET',
         token: token,
         url: url

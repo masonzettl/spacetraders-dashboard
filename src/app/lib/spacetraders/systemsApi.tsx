@@ -3,7 +3,7 @@ import { ErrorResponse, sendRequest } from "./baseApi";
 export interface Waypoint {
     systemSymbol: string;
     symbol: string;
-    type: string;
+    type: WaypointType;
     x: number;
     y: number;
     orbitals: string[];
@@ -15,12 +15,29 @@ export interface Waypoint {
     modifiers: {};
     chart: {
         submittedBy: string;
-        submittedOn: Date;
+        submittedOn: string;
     };
     faction: {
         symbol: string;
     };
     isUnderConstruction: boolean;
+}
+
+export enum WaypointType {
+    'PLANET',
+    'GAS_GIANT',
+    'MOON',
+    'ORBITAL_STATION',
+    'JUMP_GATE',
+    'ASTEROID_FIELD',
+    'ASTEROID',
+    'ENGINEERED_ASTEROID',
+    'ASTEROID_BASE',
+    'NEBULA',
+    'DEBRIS_FIELD',
+    'GRAVITY_WELL',
+    'ARTIFICIAL_GRAVITY_WELL',
+    'FUEL_STATION'
 }
 
 export async function getWaypointInfo(token: string, symbol: string): Promise<Waypoint | ErrorResponse> {
