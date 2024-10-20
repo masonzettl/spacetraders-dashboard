@@ -33,6 +33,20 @@ export default function WaypointPanel({ symbol }: { symbol: string }) {
         <PanelListItem key="system" title="System">
           {waypointData.systemSymbol}
         </PanelListItem>
+        <PanelListItem key="orbitals" title="Orbitals">
+          <ul className="list-none p-0 m-0">
+            {waypointData.orbitals?.map(orbital => 
+              <li key={orbital.symbol}>
+                {orbital.symbol}
+              </li>
+            )}
+          </ul>
+        </PanelListItem>
+        {waypointData.orbits ?
+          <PanelListItem key="orbits" title="Orbits">
+            {waypointData.orbits}
+          </PanelListItem>
+        : <></>}
         <PanelListItem key="faction" title="Faction">
           {waypointData.faction?.symbol}
         </PanelListItem>
@@ -46,6 +60,18 @@ export default function WaypointPanel({ symbol }: { symbol: string }) {
               </li>)}
           </ul>
         </PanelListItem>
+        {waypointData.modifiers?.length != 0 ?
+          <PanelListItem key="modifiers" title="Modifiers">
+            <ul className="list-none p-0 m-0">
+              {waypointData.modifiers?.map(modifier =>
+                <li key={modifier.symbol} className="flex justify-end w-full">
+                  <Tooltip text={modifier.description}>
+                    {modifier.name}
+                  </Tooltip>
+                </li>)}
+            </ul>
+          </PanelListItem>
+        : <></>}
       </PanelList>
     </BasePanel>
   )

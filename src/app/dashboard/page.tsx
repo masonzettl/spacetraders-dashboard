@@ -9,10 +9,12 @@ import { Agent } from "../lib/spacetraders/agentsApi";
 import { TokenContext } from "../context/TokenContext";
 import Overview from "./Overview";
 import Contracts from "./Contracts";
+import Trading from "./Trading";
 
 enum Tab {
   Overview,
-  Contracts
+  Contracts,
+  Trading
 }
 
 export default function Dashboard() {
@@ -48,6 +50,7 @@ export default function Dashboard() {
     switch(currentTab) {
       case Tab.Overview : return <Overview agent={agentDetails} />
       case Tab.Contracts : return <Contracts />
+      case Tab.Trading : return <Trading waypointSymbol={agentDetails.headquarters} />
     }
   }
 
@@ -64,6 +67,9 @@ export default function Dashboard() {
                 </li>
                 <li className={currentTab == Tab.Contracts ? "text-cyan-300 underline" : "text-gray-400 hover:text-white transition-colors"}>
                   <a onClick={() => setCurrentTab(Tab.Contracts)}>Contracts</a>
+                </li>
+                <li className={currentTab == Tab.Trading ? "text-cyan-300 underline" : "text-gray-400 hover:text-white transition-colors"}>
+                  <a onClick={() => setCurrentTab(Tab.Trading)}>Trading</a>
                 </li>
               </ul>
             </div>

@@ -1,6 +1,7 @@
 import { ErrorResponse, QueryParameters, sendRequest } from "./baseApi"
 import { FactionSymbol } from "./factionsApi"
 import { WaypointType } from "./systemsApi"
+import { TradeSymbol } from "./tradingApi"
 
 export interface Ship {
     symbol: string
@@ -125,7 +126,7 @@ export interface ShipCargo {
 }
 
 export interface ShipCargoItem {
-    symbol: string
+    symbol: TradeSymbol
     name: string
     description: string
     units: number
