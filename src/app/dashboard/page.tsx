@@ -56,9 +56,9 @@ export default function Dashboard() {
 
   return (
     <TokenContext.Provider value={token}>
-      <main className="text-white px-10">
-        <section className="h-screen">
-          <nav className="px-4 py-3 mt-1 mb-2 rounded-xl flex justify-between bg-gray-950 shadow-md">
+      <main className="text-white h-screen px-10 pt-1">
+        <section>
+          <nav className="px-4 py-3 mb-2 rounded-xl flex justify-between bg-gray-950 shadow-md">
             <div className="flex items-center space-x-6">
               <h1 className="text-xl">SpaceTraders Dashboard</h1>
               <ul className="flex space-x-2">

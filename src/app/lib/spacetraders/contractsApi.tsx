@@ -1,5 +1,5 @@
 import { Agent } from "./agentsApi";
-import { ApiResponse, ErrorResponse, QueryParameters, sendRequest } from "./baseApi";
+import { ErrorResponse, QueryParameters, sendRequest } from "./baseApi";
 
 // ~ CONTRACT INTERFACES ~
 
@@ -37,14 +37,18 @@ export interface ContractDeliverGood {
 
 // ~ CONTRACT ENUMS ~
 enum ContractType {
-    "PROCUREMENT",
-    "TRANSPORT",
-    "SHUTTLE"
+    PROCUREMENT = "PROCUREMENT",
+    TRANSPORT = "TRANSPORT",
+    SHUTTLE = "SHUTTLE"
 }
 
 // ~ CONTRACT TYPES ~
-type AcceptContractReponse = {
+type UpdateContractResponse = {
     agent: Agent,
+    contract: Contract
+}
+
+type NegotiateContractResponse = {
     contract: Contract
 }
 
@@ -65,10 +69,34 @@ export async function getContracts({ token, parameters }: { token: string, param
     return response;
 }
 
-export async function acceptContract({ token, contract }: { token: string, contract: Contract }): Promise<AcceptContractReponse | ErrorResponse> {
+export async function acceptContract({ token, contract }: { token: string, contract: Contract }): Promise<UpdateContractResponse | ErrorResponse> {
     const url = `https://api.spacetraders.io/v2/my/contracts/${contract.id}/accept`;
 
-    const response = await sendRequest<AcceptContractReponse>({
+    const response = await sendRequest<UpdateContractResponse>({
+        method: 'POST',
+        token: token,
+        url: url
+    });
+
+    return response;
+}
+
+export async function fulfillContract({ token, contract }: { token: string, contract: Contract }): Promise<UpdateContractResponse | ErrorResponse> {
+    const url = `https://api.spacetraders.io/v2/my/contracts/${contract.id}/fulfill`;
+
+    const response = await sendRequest<UpdateContractResponse>({
+        method: 'POST',
+        token: token,
+        url: url
+    });
+
+    return response;
+}
+
+export async function negotiateContract({ token, shipSymbol }: { token: string, shipSymbol: string }): Promise<NegotiateContractResponse | ErrorResponse> {
+    const url = `https://api.spacetraders.io/v2/my/ships/${shipSymbol}/negotiate/contract`;
+
+    const response = await sendRequest<NegotiateContractResponse>({
         method: 'POST',
         token: token,
         url: url
