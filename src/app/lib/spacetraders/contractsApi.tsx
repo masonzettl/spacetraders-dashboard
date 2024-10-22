@@ -1,5 +1,7 @@
 import { Agent } from "./agentsApi";
 import { ErrorResponse, QueryParameters, sendRequest } from "./baseApi";
+import { ShipCargo } from "./fleetApi";
+import { TradeSymbol } from "./tradingApi";
 
 // ~ CONTRACT INTERFACES ~
 
@@ -35,21 +37,31 @@ export interface ContractDeliverGood {
     unitsFulfilled: number;
 }
 
+interface UpdateContractResponse {
+    agent: Agent,
+    contract: Contract
+}
+
+interface NegotiateContractResponse {
+    contract: Contract
+}
+
+export interface DeliverCargoParameters {
+    shipSymbol: string,
+    tradeSymbol: TradeSymbol,
+    units: number
+}
+
+interface DeliverCargoResponse {
+    contract: Contract,
+    cargo: ShipCargo
+}
+
 // ~ CONTRACT ENUMS ~
 enum ContractType {
     PROCUREMENT = "PROCUREMENT",
     TRANSPORT = "TRANSPORT",
     SHUTTLE = "SHUTTLE"
-}
-
-// ~ CONTRACT TYPES ~
-type UpdateContractResponse = {
-    agent: Agent,
-    contract: Contract
-}
-
-type NegotiateContractResponse = {
-    contract: Contract
 }
 
 // ~ CONTRACT REQUESTS ~
@@ -75,6 +87,19 @@ export async function acceptContract({ token, contract }: { token: string, contr
     const response = await sendRequest<UpdateContractResponse>({
         method: 'POST',
         token: token,
+        url: url
+    });
+
+    return response;
+}
+
+export async function deliverCargo({ token, contract, parameters }: { token: string, contract: Contract, parameters: DeliverCargoParameters }): Promise<DeliverCargoResponse | ErrorResponse> {
+    const url = `https://api.spacetraders.io/v2/my/contracts/${contract.id}/deliver`;
+
+    const response = await sendRequest<DeliverCargoResponse>({
+        method: 'POST',
+        token: token,
+        parameters: parameters,
         url: url
     });
 

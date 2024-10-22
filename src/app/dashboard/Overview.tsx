@@ -4,8 +4,13 @@ import BasePanel from "../components/panels/BasePanel";
 import FactionPanel from "../components/panels/FactionPanel";
 import PanelList from "../components/PanelList";
 import PanelListItem from "../components/items/PanelListItem";
+import { useContext } from "react";
+import { AgentContext } from "../context/AgentContext";
 
-export default function Overview({ agent }: { agent: Agent }) {
+export default function Overview() {
+  const agentContext = useContext(AgentContext);
+  const agent = agentContext.agent;
+
   return (
     <>
       <h1 className="text-5xl font-bold my-4">Overview</h1>

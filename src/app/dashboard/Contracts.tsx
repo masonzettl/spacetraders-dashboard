@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import ContractListPanel from "../components/panels/ContractListPanel";
-import { acceptContract, Contract, fulfillContract, getContracts, negotiateContract } from "../lib/spacetraders/contractsApi";
+import { acceptContract, Contract, deliverCargo, DeliverCargoParameters, fulfillContract, getContracts, negotiateContract } from "../lib/spacetraders/contractsApi";
 import ContractPanel from "../components/panels/ContractPanel";
 import { TokenContext } from "../context/TokenContext";
+import { AgentContext } from "../context/AgentContext";
 
 export default function Contracts() {
   const token = useContext(TokenContext);
+  const agentContext = useContext(AgentContext);
 
   const [contracts, setContracts] = useState([] as Contract[]);
   const [selectedContract, setSelectedContract] = useState({} as Contract);
@@ -46,7 +48,7 @@ export default function Contracts() {
   }
 
   const negotiateContractCallback = async (shipSymbol: string) => {
-    const data = await negotiateContract({ token: token, shipSymbol: shipSymbol });
+    const data = await negotiateContract({ token, shipSymbol });
 
     if ('contract' in data)
       updateContract(data.contract);
@@ -57,13 +59,24 @@ export default function Contracts() {
 
     if ('contract' in data)
       updateContract(data.contract);
+    if ('agent' in data)
+      agentContext.setAgent(data.agent);
   }
 
-  const fulfillContractCallback = async () => {
-    const data = await fulfillContract({ token: token, contract: selectedContract });
+  const deliverCargoCallback = async (parameters: DeliverCargoParameters) => {
+    const data = await deliverCargo({ token, contract: selectedContract, parameters });
 
     if ('contract' in data)
       updateContract(data.contract);
+  }
+
+  const fulfillContractCallback = async () => {
+    const data = await fulfillContract({ token, contract: selectedContract });
+
+    if ('contract' in data)
+      updateContract(data.contract);
+    if ('agent' in data)
+      agentContext.setAgent(data.agent);
   }
 
   return (
@@ -72,7 +85,7 @@ export default function Contracts() {
 
       <div className="flex space-x-4">
         <ContractListPanel contracts={contracts} onSelect={setSelectedContract} onNegotiate={negotiateContractCallback} />
-        <ContractPanel contract={selectedContract} onAccept={acceptContractCallback} onFulfill={fulfillContractCallback} />
+        <ContractPanel contract={selectedContract} onAccept={acceptContractCallback} onFulfill={fulfillContractCallback} onDeliver={deliverCargoCallback} />
       </div>
     </>
   );
