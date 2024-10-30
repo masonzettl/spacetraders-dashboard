@@ -1,6 +1,20 @@
 import { ErrorResponse, sendRequest } from "./baseApi";
 import { FactionSymbol } from "./factionsApi";
 
+export interface System {
+    symbol: string;
+    sectorSymbol: string;
+    type: SystemType;
+    x: number;
+    y: number;
+    waypoints: Waypoint[];
+    factions: SystemFaction[];
+}
+
+export interface SystemFaction {
+    symbol: FactionSymbol
+}
+
 export interface Waypoint {
     systemSymbol: string;
     symbol: string;
@@ -38,21 +52,34 @@ export interface Chart {
     submittedOn?: string;
 }
 
+export enum SystemType {
+    NEUTRON_STAR = 'NEUTRON_STAR',
+    RED_STAR = 'RED_STAR',
+    ORANGE_STAR = 'ORANGE_STAR',
+    BLUE_STAR = 'BLUE_STAR',
+    YOUNG_STAR = 'YOUNG_STAR',
+    WHITE_DWARF = 'WHITE_DWARF',
+    BLACK_HOLE = 'BLACK_HOLE',
+    HYPERGIANT = 'HYPERGIANT',
+    NEBULA = 'NEBULA',
+    UNSTABLE = 'UNSTABLE'
+}
+
 export enum WaypointType {
-    'PLANET',
-    'GAS_GIANT',
-    'MOON',
-    'ORBITAL_STATION',
-    'JUMP_GATE',
-    'ASTEROID_FIELD',
-    'ASTEROID',
-    'ENGINEERED_ASTEROID',
-    'ASTEROID_BASE',
-    'NEBULA',
-    'DEBRIS_FIELD',
-    'GRAVITY_WELL',
-    'ARTIFICIAL_GRAVITY_WELL',
-    'FUEL_STATION'
+    PLANET = 'PLANET',
+    GAS_GIANT = 'GAS_GIANT',
+    MOON = 'MOON',
+    ORBITAL_STATION = 'ORBITAL_STATION',
+    JUMP_GATE = 'JUMP_GATE',
+    ASTEROID_FIELD = 'ASTEROID_FIELD',
+    ASTEROID = 'ASTEROID',
+    ENGINEERED_ASTEROID = 'ENGINEERED_ASTEROID',
+    ASTEROID_BASE = 'ASTEROID_BASE',
+    NEBULA = 'NEBULA',
+    DEBRIS_FIELD = 'DEBRIS_FIELD',
+    GRAVITY_WELL = 'GRAVITY_WELL',
+    ARTIFICIAL_GRAVITY_WELL = 'ARTIFICIAL_GRAVITY_WELL',
+    FUEL_STATION = 'FUEL_STATION'
 }
 
 export enum WaypointTraitSymbol {
@@ -128,11 +155,23 @@ export enum WaypointTraitSymbol {
 }
 
 export enum WaypointModifierSymbol {
-    'STRIPPED',
-    'UNSTABLE',
-    'RADIATION_LEAK',
-    'CRITICAL_LIMIT',
-    'CIVIL_UNREST'
+    STRIPPED = 'STRIPPED',
+    UNSTABLE = 'UNSTABLE',
+    REDIATION_LEAK = 'RADIATION_LEAK',
+    CRITICAL_LIMIT = 'CRITICAL_LIMIT',
+    CIVIL_UNREST = 'CIVIL_UNREST'
+}
+
+export async function getSystem({ token, symbol }: { token?: string, symbol: string }): Promise<System | ErrorResponse> {
+    const url = `https://api.spacetraders.io/v2/systems/${symbol}`;
+
+    const response = sendRequest<System>({
+        method: 'GET',
+        ...token && {token: token},
+        url: url
+    });
+
+    return response;
 }
 
 export async function getWaypointInfo(token: string, symbol: string): Promise<Waypoint | ErrorResponse> {

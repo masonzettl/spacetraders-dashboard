@@ -7,13 +7,13 @@ import ArrowRightStartOnRectangleIcon from "@heroicons/react/24/outline/esm/Arro
 import { getAgent } from "../lib/spacetraders/agentsApi";
 import { Agent } from "../lib/spacetraders/agentsApi";
 import { TokenContext } from "../context/TokenContext";
-import Overview from "./Overview";
+import Explore from "./Explore";
 import Contracts from "./Contracts";
 import Trading from "./Trading";
 import { AgentContext } from "../context/AgentContext";
 
 enum Tab {
-  Overview,
+  Explore,
   Contracts,
   Trading
 }
@@ -28,7 +28,7 @@ export default function Dashboard() {
   }
   
   const [agentDetails, setAgentDetails] = useState({} as Agent);
-  const [currentTab, setCurrentTab] = useState(Tab.Overview);
+  const [currentTab, setCurrentTab] = useState(Tab.Explore);
   
   useEffect(() => {
     // Async cannot be used in the useEffect itself, so we define an async function inside of it as a workaround
@@ -49,7 +49,7 @@ export default function Dashboard() {
 
   const renderTab = () => {
     switch(currentTab) {
-      case Tab.Overview : return <Overview />
+      case Tab.Explore : return <Explore />
       case Tab.Contracts : return <Contracts />
       case Tab.Trading : return <Trading waypointSymbol={agentDetails.headquarters} />
     }
@@ -64,8 +64,8 @@ export default function Dashboard() {
               <div className="flex items-center space-x-6">
                 <h1 className="text-xl">SpaceTraders Dashboard</h1>
                 <ul className="flex space-x-2">
-                  <li className={currentTab == Tab.Overview ? "text-cyan-300 underline" : "text-gray-400 hover:text-white transition-colors"}>
-                    <a onClick={() => setCurrentTab(Tab.Overview)} className="font-semibold">Overview</a>
+                  <li className={currentTab == Tab.Explore ? "text-cyan-300 underline" : "text-gray-400 hover:text-white transition-colors"}>
+                    <a onClick={() => setCurrentTab(Tab.Explore)} className="font-semibold">Explore</a>
                   </li>
                   <li className={currentTab == Tab.Contracts ? "text-cyan-300 underline" : "text-gray-400 hover:text-white transition-colors"}>
                     <a onClick={() => setCurrentTab(Tab.Contracts)} className="font-semibold">Contracts</a>
